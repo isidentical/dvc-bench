@@ -1,1 +1,1 @@
-{"regressions": [["scm.InitScmBench.time_init", "graphs/arch-x86_64/branch-master/cpu-Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz/machine-fv-az32/num_cpu-2/os-Linux 5.3.0-1022-azure/python-3.7/ram-7093496/scm.InitScmBench.time_init.json", {}, null, 0.07343921350002347, 0.050485530999992534, [[6346, 6504, 0.050485530999992534, 0.07343921350002347]]]]}
+{"regressions": []}
