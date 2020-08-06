@@ -11,6 +11,7 @@ phases:
       - python3 -m venv build_venv 
       - . build_venv/bin/activate
       - pip install -r requirements.txt
+      - python write_asv_machine.py
   build:
     commands:
       - dvc repro run_benchmarks 
