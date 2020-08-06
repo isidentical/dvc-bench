@@ -37,7 +37,7 @@ jobs:
       - name: Run CodeBuild
         uses: aws-actions/aws-codebuild-run-project@v1.0.3
         with:
-          project-name: DVCBench
+          project-name: dvc-bench
           env-vars-for-codebuild: |
             custom,
             requester,
