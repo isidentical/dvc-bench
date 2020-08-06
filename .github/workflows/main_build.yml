@@ -46,8 +46,8 @@ jobs:
         env:
           custom: my environment variable
           requester: ${{ github.actor }}
-          event-name: ${{ github.event_name }}
           DVC_TEST: "true"
+          event-name: ${{ github.event_name }}
 #      - name: download data
 #        run: dvc pull data/cats_dogs.dvc
 #      - name: download existing results
