@@ -2,7 +2,7 @@ name: master build
 on:
   push:
     branches:
-      - master
+      - test_codebuild
 
 env:
   DVC_TEST: "true"
@@ -34,63 +34,76 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
-      - name: download data
-        run: dvc pull data/cats_dogs.dvc
-      - name: download existing results
-        run: aws s3 cp --recursive s3://dvc-bench/latest_results results
-      - name: run benchmarks
-        run: dvc repro -f run_benchmarks
-      - name: upload raw results
-        uses: actions/upload-artifact@v2
+      - name: Run CodeBuild
+        uses: aws-actions/aws-codebuild-run-project@v1
         with:
-          name: results-${{ matrix.os }}
-          path: results
-  publish:
-    name: join results and publish
-    needs: build
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.7
-      - uses: actions/checkout@v2
-      - name: install requirements
-        run: pip install -r requirements.txt
-      - name: download ubuntu results
-        uses: actions/download-artifact@v2
-        with:
-          name: results-ubuntu-18.04
-          path: /tmp/results-ubuntu
-      - name: download macos results
-        uses: actions/download-artifact@v2
-        with:
-          name: results-macos-10.15
-          path: /tmp/results-macos
-      - name: download windows results
-        uses: actions/download-artifact@v2
-        with:
-          name: results-windows-2019
-          path: /tmp/results-windows
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-2
-      - name: download existing results
-        run: aws s3 cp --recursive s3://dvc-bench/latest_results results
-      - name: join results
-        run: |
-          cp -r /tmp/results-windows/win* results/
-          cp -r /tmp/results-macos/darwin* results/
-          cp -r /tmp/results-ubuntu/linux* results/
-          cp /tmp/results-ubuntu/benchmarks.json results/benchmarks.json
-      - name: create static html
-        run: asv update && asv publish
-      - name: upload new results
-        run: aws s3 cp --recursive results s3://dvc-bench/latest_results
-      - name: deploy new benchmarks to github pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: html
+          project-name: DVCBench
+          buildspec-override: path/to/buildspec.yaml
+          env-vars-for-codebuild: |
+            custom,
+            requester,
+            event-name
+        env:
+          custom: my environment variable
+          requester: ${{ github.actor }}
+          event-name: ${{ github.event_name }}
+#      - name: download data
+#        run: dvc pull data/cats_dogs.dvc
+#      - name: download existing results
+#        run: aws s3 cp --recursive s3://dvc-bench/latest_results results
+#      - name: run benchmarks
+#        run: dvc repro -f run_benchmarks
+#      - name: upload raw results
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: results-${{ matrix.os }}
+#          path: results
+#  publish:
+#    name: join results and publish
+#    needs: build
+#    runs-on: ubuntu-18.04
+#    steps:
+#      - uses: actions/setup-python@v2
+#        with:
+#          python-version: 3.7
+#      - uses: actions/checkout@v2
+#      - name: install requirements
+#        run: pip install -r requirements.txt
+#      - name: download ubuntu results
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: results-ubuntu-18.04
+#          path: /tmp/results-ubuntu
+#      - name: download macos results
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: results-macos-10.15
+#          path: /tmp/results-macos
+#      - name: download windows results
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: results-windows-2019
+#          path: /tmp/results-windows
+#      - name: configure aws credentials
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: us-east-2
+#      - name: download existing results
+#        run: aws s3 cp --recursive s3://dvc-bench/latest_results results
+#      - name: join results
+#        run: |
+#          cp -r /tmp/results-windows/win* results/
+#          cp -r /tmp/results-macos/darwin* results/
+#          cp -r /tmp/results-ubuntu/linux* results/
+#          cp /tmp/results-ubuntu/benchmarks.json results/benchmarks.json
+#      - name: create static html
+#        run: asv update && asv publish
+#      - name: upload new results
+#        run: aws s3 cp --recursive results s3://dvc-bench/latest_results
+#      - name: deploy new benchmarks to github pages
+#        uses: peaceiris/actions-gh-pages@v3
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          publish_dir: html
