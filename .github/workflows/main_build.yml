@@ -42,16 +42,16 @@ jobs:
             custom,
             requester,
             event-name,
-            dvc-test,
-            aws-access-key-id,
-            aws-secret-access-key
+            DVC_TEST,
+            AWS_ACCESS_KEY_ID,
+            AWS_SECRET_ACCESS_KEY
         env:
           custom: my environment variable
           requester: ${{ github.actor }}
           event-name: ${{ github.event_name }}
-          dvc-test: "true"
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          DVC_TEST: "true"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 #      - name: download data
 #        run: dvc pull data/cats_dogs.dvc
 #      - name: download existing results
