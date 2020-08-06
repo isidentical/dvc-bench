@@ -6,7 +6,7 @@ phases:
       python: 3.8
       nodejs: 12
     commands:
-      - ASSUME_ROLE_ARN="arn:aws:iam::260760892802:role/dvc-bench-runner"
+      - ASSUME_ROLE_ARN="arn:aws:iam::260760892802:role/dvc-bench-assume-role"
       - TEMP_ROLE=`aws sts assume-role --role-arn $ASSUME_ROLE_ARN --role-session-name test`
       - export TEMP_ROLE
       - echo $TEMP_ROLE
