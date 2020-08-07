@@ -6,10 +6,11 @@ phases:
       python: 3.8
       nodejs: 12
     commands:
-      - SET ASSUME_ROLE_ARN="arn:aws:iam::260760892802:role/dvc-bench-runner"
-      - echo %ASSUME_ROLE_ARN%
-      - SET TEMP_ROLE="aws sts assume-role --role-arn %ASSUME_ROLE_ARN% --role-session-name test"
-      - echo %TEMP_ROLE%
+      - SetVariable  -Name "ASSUME_ROLE_ARN" -Value "arn:aws:iam::260760892802:role/dvc-bench-runner"
+      - WriteDebug $ASSUME_ROLE_ARN
+#      - echo %ASSUME_ROLE_ARN%
+#      - SET TEMP_ROLE="aws sts assume-role --role-arn %ASSUME_ROLE_ARN% --role-session-name test"
+#      - echo %TEMP_ROLE%
   pre_build:
     commands:
       - python3 -m venv /tmp/build_venv
