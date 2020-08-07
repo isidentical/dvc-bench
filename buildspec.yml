@@ -17,8 +17,8 @@ phases:
     commands:
       - apt-get update
       - apt-get install -y python3-venv
-      - python3 -m venv build_venv 
-      - . build_venv/bin/activate
+      - python3 -m venv /tmp/build_venv
+      - . /tmp/build_venv/bin/activate
       - pip install -r requirements.txt
       - python write_asv_machine.py
       - dvc pull data/cats_dogs.dvc
