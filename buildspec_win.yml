@@ -1,0 +1,29 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.8
+      nodejs: 12
+    commands:
+      - SET ASSUME_ROLE_ARN="arn:aws:iam::260760892802:role/dvc-bench-runner"
+      - SET TEMP_ROLE=`aws sts assume-role --role-arn $ASSUME_ROLE_ARN --role-session-name test`
+      - echo $TEMP_ROLE
+      - SET AWS_ACCESS_KEY_ID=$(echo "${TEMP_ROLE}" | jq -r '.Credentials.AccessKeyId')
+      - SET AWS_SECRET_ACCESS_KEY=$(echo "${TEMP_ROLE}" | jq -r '.Credentials.SecretAccessKey')
+      - SET AWS_SESSION_TOKEN=$(echo "${TEMP_ROLE}" | jq -r '.Credentials.SessionToken')
+  pre_build:
+    commands:
+      - apt-get update
+      - apt-get install -y python3-venv
+      - python3 -m venv /tmp/build_venv
+      - . /tmp/build_venv/bin/activate
+      - pip install -r requirements.txt
+      - python write_asv_machine.py
+      - dvc pull data/cats_dogs.dvc
+  build:
+    commands:
+      - dvc repro run_benchmarks 
+  post_build:
+    commands:
+      - echo Build completed on `date`

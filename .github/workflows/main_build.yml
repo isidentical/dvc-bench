@@ -38,6 +38,7 @@ jobs:
         uses: aws-actions/aws-codebuild-run-project@v1.0.3
         with:
           project-name: dvc-bench-windows
+          buildspec-override: buildspec_win.yml
           env-vars-for-codebuild: |
             custom,
             requester,
