@@ -7,6 +7,7 @@ phases:
       nodejs: 12
     commands:
       - SET ASSUME_ROLE_ARN="arn:aws:iam::260760892802:role/dvc-bench-runner"
+      - echo %ASSUME_ROLE_ARN%
       - SET TEMP_ROLE="aws sts assume-role --role-arn %ASSUME_ROLE_ARN% --role-session-name test"
       - echo %TEMP_ROLE%
   pre_build:
