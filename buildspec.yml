@@ -21,10 +21,9 @@ phases:
       - . build_venv/bin/activate
       - pip install -r requirements.txt
       - python write_asv_machine.py
-      - dvc pull data/cats_dogs.dvc
   build:
     commands:
-      - dvc repro run_benchmarks 
+      - cat ~/.asv-machine.json
   post_build:
     commands:
       - echo Build completed on `date`
