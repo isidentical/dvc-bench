@@ -2,7 +2,7 @@ name: master build
 on:
   push:
     branches:
-      - master
+      - setup_custom_runner
 
 env:
   DVC_TEST: "true"
@@ -40,6 +40,8 @@ jobs:
         run: aws s3 cp --recursive s3://dvc-bench/latest_results results
       - name: run benchmarks
         run: dvc repro -f run_benchmarks
+      - name: fail action
+        run: exit 1
       - name: upload raw results
         uses: actions/upload-artifact@v2
         with:
