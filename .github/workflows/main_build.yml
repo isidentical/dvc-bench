@@ -10,10 +10,7 @@ env:
 jobs:
   build:
     name: run benchmarks
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-18.04]
+    runs-on: dvc-runner
     steps:
       - uses: actions/setup-python@v2
         with:
@@ -22,7 +19,6 @@ jobs:
       - name: install requirements
         run: pip install -r requirements.txt
       - name: check project styling
-        if: matrix.os == 'ubuntu-18.04'
         run: pre-commit run --all-files
       - name: run tests
         run: python -m py.test
