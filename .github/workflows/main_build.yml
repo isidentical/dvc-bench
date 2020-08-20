@@ -20,7 +20,8 @@ jobs:
         run: pip install -r requirements.txt
       - name: check project styling
         run: pre-commit run --all-files
-        env: ACTIONS_STEP_DEBUG: true
+        env: 
+          ACTIONS_STEP_DEBUG: "true"
       - name: run tests
         run: python -m py.test
       - name: setup asv
